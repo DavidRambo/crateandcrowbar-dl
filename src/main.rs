@@ -4,7 +4,10 @@
 //! expects, so I opted to do it simply and synchronously with a five-second
 //! sleep after every five downloads.
 //!
-//! Change the first_ep_no and last_ep_no values to select which episodes to download.
+//! Change the `first_ep_no` and `last_ep_no` values to select which episodes to download.
+//! Change the `threads` value for how many threads you want to run. I have a 6C/12HT CPU, so I
+//! just settled for four. Additionally, since many of the later episodes (starting in the late 70s)
+//! are hosted on Tom Francis's web server, I did not want to slam it.
 //!
 //! The earliest episodes are hosted on AWS. Then, starting at episode 76, they
 //! are mostly hosted on Tom Francis's website. At least two episodes (77 and 82) are linked
@@ -21,6 +24,8 @@
 //!
 //! Unfortunately, there isn't a clear cut-off. The zero prefix seems to be the standard.
 //! But once ep 100 is hit, it stops being a concern.
+//!
+//! Hence the use of multiple request attempts.
 //!
 //! A useful reference: https://github.com/Drew-Chase/parallel-downloads-with-events
 
@@ -79,6 +84,7 @@ fn download_ep(uri: &str, pod_file: &mut File, ep_no: usize) -> Option<u64> {
 fn main() {
     std::env::set_current_dir("/var/home/david/crate_and_crowbar").expect("Change PWD");
 
+    // Create list of episode numbers.
     let first_ep_no = 90;
     let last_ep_no = 120;
     let episodes_vec = (first_ep_no..=last_ep_no).collect::<Vec<usize>>();
