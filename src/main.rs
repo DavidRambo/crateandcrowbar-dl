@@ -82,7 +82,10 @@ fn download_ep(uri: &str, pod_file: &mut File, ep_no: usize) -> Option<u64> {
 }
 
 fn main() {
-    std::env::set_current_dir("/var/home/david/crate_and_crowbar").expect("Change PWD");
+    // NOTE: Be sure to update the path for your system!
+    // This is where downloaded files will be saved.
+    // In this example, make sure the crate_and_crowbar directory already exists.
+    std::env::set_current_dir("/var/home/{YOUR_HOME_HERE}/crate_and_crowbar").expect("Change PWD");
 
     // Create list of episode numbers.
     let first_ep_no = 90;
