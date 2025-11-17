@@ -131,7 +131,6 @@ fn main() {
 
                     if download_ep(&episode_url, &mut pod_file, ep_no).is_none() {
                         // Finally, try Tom F's web server without zero padding.
-                        println!("Zero-padding episode {ep_no} did not work, trying without...");
                         let episode_url = format_pentadact_url_no_zero(ep_no);
                         if download_ep(&episode_url, &mut pod_file, ep_no).is_none() {
                             eprintln!(">>> Failed to download episode {ep_no}");
