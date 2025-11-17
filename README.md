@@ -23,7 +23,7 @@ There are three different functions that format a URI from which to download an 
 - `format_pentadact_uri_no_zero`
 
 The earliest episodes are hosted on AWS.
-Then, starting at episode 76, they are mostly hosted on (Tom Francis's website)[https://www.pentadact.com].
+Then, starting at episode 76, they are mostly hosted on [Tom Francis's website](https://www.pentadact.com).
 At least two episodes (77 and 82) are linked to AWS on the crateandcrowbar.com (the "Download" link beneath the embedded media player).
 At least two episodes are available on AWS but not linked to from the podcast website (107 and 108).
 
