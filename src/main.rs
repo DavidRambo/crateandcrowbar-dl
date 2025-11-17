@@ -38,7 +38,7 @@ fn format_aws_url(ep_no: usize) -> String {
     // For example: "001" or "122"
     let url_ext = ".mp3";
 
-    format!("{url_base}{:<03}{url_ext}", ep_no)
+    format!("{url_base}{ep_no:<03}{url_ext}")
 }
 
 /// Given an episode number, returns the URL for downloading that episode from Tom F's website.
@@ -48,7 +48,7 @@ fn format_pentadact_url_with_zero(ep_no: usize) -> String {
     // For example: "084" or "122"
     let url_ext = ".mp3";
 
-    format!("{url_base}{:<03}{url_ext}", ep_no)
+    format!("{url_base}{ep_no:<03}{url_ext}")
 }
 
 /// Given an episode number, returns the URL for downloading that episode from Tom F's website.
@@ -57,7 +57,7 @@ fn format_pentadact_url_no_zero(ep_no: usize) -> String {
     let url_base = "https://www.pentadact.com/podcast/CCEp";
     let url_ext = ".mp3";
 
-    format!("{url_base}{:}{url_ext}", ep_no)
+    format!("{url_base}{ep_no}{url_ext}")
 }
 
 /// Attempts to download the episode mp3 and save it to the specified file.
@@ -67,11 +67,11 @@ fn download_ep(url: &str, pod_file: &mut File, ep_no: usize) -> Option<u64> {
         if res.status().is_success() {
             match res.copy_to(pod_file) {
                 Ok(res) => {
-                    println!("Downloaded episode {}. File size: {res}", ep_no);
+                    println!("Downloaded episode {ep_no}. File size: {res}");
                     return Some(res);
                 }
                 Err(err) => {
-                    eprintln!("Failed to download episode {} at {url}", ep_no);
+                    eprintln!("Failed to download episode {ep_no} at {url}");
                     eprintln!("Error: {err}");
                     return None;
                 }
@@ -113,13 +113,10 @@ fn main() {
 
         for ep_no in chunk {
             let handle = std::thread::spawn(move || {
-                let fpath = format!("CC{}.mp3", ep_no);
+                let fpath = format!("CC{ep_no}.mp3");
                 let mut pod_file = File::create(fpath).expect("Create file for episode download");
 
-                println!(
-                    "Attempting to download Crate and Crowbar episode {}...",
-                    ep_no
-                );
+                println!("Attempting to download Crate and Crowbar episode {ep_no}...");
 
                 // Attempt to download from the various URL possibilities.
                 // If there were more than three URL formatting options, then I'd create an enum
