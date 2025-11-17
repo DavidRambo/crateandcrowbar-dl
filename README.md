@@ -1,6 +1,6 @@
 # Crate and Crowbar Episode Downloader
 
-This Rust crate downloads episodes of The Crate and Crowbar podcast from the download links provided on their website: crateandcrowbar.com.
+This Rust crate downloads episodes of The Crate and Crowbar podcast from the download links provided on their website: [crateandcrowbar.com](crateandcrowbar.com).
 I wrote this because podcast archives on, say, Apple Podcasts, only have the most recent 300 episodes available for a podcast, and I wanted to listen to older episodes.
 
 ## Usage
@@ -28,10 +28,15 @@ At least two episodes (77 and 82) are linked to AWS on the crateandcrowbar.com (
 At least two episodes are available on AWS but not linked to from the podcast website (107 and 108).
 
 The URI looks like either:
+
 "https://s3-eu-west-1.amazonaws.com/crateandcrowbar/episodes/CCEp001.mp3"
+
 or:
+
 "https://www.pentadact.com/podcast/CCEp079.mp3"
+
 or:
+
 "https://www.pentadact.com/podcast/CCEp78.mp3"
 
 Unfortunately, there isn't a clear cut-off.
