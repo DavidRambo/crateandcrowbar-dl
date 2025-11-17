@@ -10,7 +10,7 @@ Instead, get Rust on your system and clone the repository.
 
 There are a few values to set in the `main` function.
 
-1. First, decide where you want to save the files and put the absolute path in the `std::env::set_current_dir` call.
+1. First, decide where you want to save the files and assign the absolute path to the `dl_dir` name.
 2. Then change the `first_ep_no` and `last_ep_no` values to select which episodes to download.
 3. Finally, change the `threads` value for how many threads you want to run. I have a 6C/12HT CPU, so I just settled for four. Additionally, since many of the later episodes (starting in the late 70s) are hosted on Tom Francis's web server, I did not want to slam it.
 

@@ -85,7 +85,12 @@ fn main() {
     // NOTE: Be sure to update the path for your system!
     // This is where downloaded files will be saved.
     // In this example, make sure the crate_and_crowbar directory already exists.
-    std::env::set_current_dir("/var/home/{YOUR_HOME_HERE}/crate_and_crowbar").expect("Change PWD");
+    let dl_dir = std::path::Path::new("/var/home/{YOUR_HOME_HERE}/crate_and_crowbar");
+    if !dl_dir.exists() {
+        eprintln!("Invalid download directory. Be sure to set `dl_dir` to a valid directory.");
+        return;
+    }
+    std::env::set_current_dir(&dl_dir).expect("Change PWD");
 
     // NOTE: Set the range of eposides to download here.
     let first_ep_no = 1;
