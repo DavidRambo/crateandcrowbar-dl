@@ -80,7 +80,8 @@ fn download_ep(uri: &str, pod_file: &mut File, ep_no: usize) -> Option<u64> {
             return None;
         }
     }
-    return None;
+
+    None
 }
 
 fn main() {
@@ -92,7 +93,7 @@ fn main() {
         eprintln!("Invalid download directory. Be sure to set `dl_dir` to a valid directory.");
         return;
     }
-    std::env::set_current_dir(&dl_dir).expect("Change PWD");
+    std::env::set_current_dir(dl_dir).expect("Change PWD");
 
     // NOTE: Set the range of eposides to download here.
     let first_ep_no = 1;
@@ -125,16 +126,16 @@ fn main() {
                 // not terrible.
                 // First try the AWS server.
                 let episode_uri = format_aws_uri(ep_no);
-                if let None = download_ep(&episode_uri, &mut pod_file, ep_no) {
+                if download_ep(&episode_uri, &mut pod_file, ep_no).is_none() {
                     // Now try Tom F's web server using zero padding.
                     println!("AWS did not have episode {ep_no}, trying Tom F's web server...");
                     let episode_uri = format_pentadact_uri_with_zero(ep_no);
 
-                    if let None = download_ep(&episode_uri, &mut pod_file, ep_no) {
+                    if download_ep(&episode_uri, &mut pod_file, ep_no).is_none() {
                         // Finally, try Tom F's web server without zero padding.
                         println!("Zero-padding episode {ep_no} did not work, trying without...");
                         let episode_uri = format_pentadact_uri_no_zero(ep_no);
-                        if let None = download_ep(&episode_uri, &mut pod_file, ep_no) {
+                        if download_ep(&episode_uri, &mut pod_file, ep_no).is_none() {
                             eprintln!(">>> Failed to download episode {ep_no}");
                         }
                     }
