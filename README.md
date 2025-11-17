@@ -48,6 +48,8 @@ Downloaded episode 89. File size: 55931276
 
 ## Organization/Explanation
 
+### Formatting download URIs
+
 There are three different functions that format a URI from which to download an episode:
 
 - `format_aws_uri`
@@ -76,6 +78,23 @@ The zero prefix seems to be the standard.
 But once ep 100 is hit, it stops being a concern.
 
 Hence the use of multiple request attempts.
+
+In an earlier commit, before I realized that the URIs would be an issue, I had created a struct to hold both the formatted URI and the episode number, which went into the Vec of episodes.
+
+### Multithreading
+
+First, the Vec of episode numbers is [chunked](https://doc.rust-lang.org/std/slice/struct.Chunks.html) into as many chunks as threads as will be created.
+For instance, let's say I want to download the first ten episodes and use four threads.
+`[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]`
+turns into an iterator over
+`[1, 2, 3, 4]`, `[5, 6, 7, 8]`, and `[9, 10]`.
+
+The outer loop iterates over these chunks.
+Within each iteration, the chunk is turned into a Vec so that its items can be moved into the threads that are about to be spawned.
+The inner loop itreates over those items, spawning a thread for each one.
+A handle for each thread is pushed onto a Vec so that the outer loop can wait for all to join before moving on.
+
+Each thread attempts to download the episode, going over each URI formatting function as needed.
 
 # Improvements
 

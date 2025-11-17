@@ -108,6 +108,7 @@ fn main() {
     let mut handles = Vec::with_capacity(threads);
 
     for chunk in episode_chunks {
+        // Create a Vec of the chunk so its items can be moved into the spawned threads.
         let chunk = chunk.to_vec();
 
         for ep_no in chunk {
