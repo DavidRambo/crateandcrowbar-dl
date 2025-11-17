@@ -15,7 +15,7 @@
 //! At least two episodes are available on AWS but not linked to from the podcast website (107 and
 //! 108).
 //!
-//! The `uri` looks like either:
+//! The `url` looks like either:
 //! "https://s3-eu-west-1.amazonaws.com/crateandcrowbar/episodes/CCEp001.mp3"
 //! or:
 //! "https://www.pentadact.com/podcast/CCEp78.mp3"
@@ -31,39 +31,39 @@
 
 use std::fs::File;
 
-/// Given an episode number, returns the URI for downloading that episode from the AWS server.
-fn format_aws_uri(ep_no: usize) -> String {
-    let uri_base = "https://s3-eu-west-1.amazonaws.com/crateandcrowbar/episodes/CCEp";
+/// Given an episode number, returns the URL for downloading that episode from the AWS server.
+fn format_aws_url(ep_no: usize) -> String {
+    let url_base = "https://s3-eu-west-1.amazonaws.com/crateandcrowbar/episodes/CCEp";
     // Between these two strings goes the three-digit, left-padded with zeroes episode number.
     // For example: "001" or "122"
-    let uri_ext = ".mp3";
+    let url_ext = ".mp3";
 
-    format!("{uri_base}{:<03}{uri_ext}", ep_no)
+    format!("{url_base}{:<03}{url_ext}", ep_no)
 }
 
-/// Given an episode number, returns the URI for downloading that episode from Tom F's website.
-fn format_pentadact_uri_with_zero(ep_no: usize) -> String {
-    let uri_base = "https://www.pentadact.com/podcast/CCEp";
+/// Given an episode number, returns the URL for downloading that episode from Tom F's website.
+fn format_pentadact_url_with_zero(ep_no: usize) -> String {
+    let url_base = "https://www.pentadact.com/podcast/CCEp";
     // Between these two strings goes the three-digit, left-padded with zeroes episode number.
     // For example: "084" or "122"
-    let uri_ext = ".mp3";
+    let url_ext = ".mp3";
 
-    format!("{uri_base}{:<03}{uri_ext}", ep_no)
+    format!("{url_base}{:<03}{url_ext}", ep_no)
 }
 
-/// Given an episode number, returns the URI for downloading that episode from Tom F's website.
+/// Given an episode number, returns the URL for downloading that episode from Tom F's website.
 /// For example: "https://www.pentadact.com/podcast/CCEp78.mp3"
-fn format_pentadact_uri_no_zero(ep_no: usize) -> String {
-    let uri_base = "https://www.pentadact.com/podcast/CCEp";
-    let uri_ext = ".mp3";
+fn format_pentadact_url_no_zero(ep_no: usize) -> String {
+    let url_base = "https://www.pentadact.com/podcast/CCEp";
+    let url_ext = ".mp3";
 
-    format!("{uri_base}{:}{uri_ext}", ep_no)
+    format!("{url_base}{:}{url_ext}", ep_no)
 }
 
 /// Attempts to download the episode mp3 and save it to the specified file.
 /// Returns an Option of the number of bytes if successful, otherwise None.
-fn download_ep(uri: &str, pod_file: &mut File, ep_no: usize) -> Option<u64> {
-    if let Ok(mut res) = reqwest::blocking::get(uri) {
+fn download_ep(url: &str, pod_file: &mut File, ep_no: usize) -> Option<u64> {
+    if let Ok(mut res) = reqwest::blocking::get(url) {
         if res.status().is_success() {
             match res.copy_to(pod_file) {
                 Ok(res) => {
@@ -71,7 +71,7 @@ fn download_ep(uri: &str, pod_file: &mut File, ep_no: usize) -> Option<u64> {
                     return Some(res);
                 }
                 Err(err) => {
-                    eprintln!("Failed to download episode {} at {uri}", ep_no);
+                    eprintln!("Failed to download episode {} at {url}", ep_no);
                     eprintln!("Error: {err}");
                     return None;
                 }
@@ -121,22 +121,22 @@ fn main() {
                     ep_no
                 );
 
-                // Attempt to download from the various URI possibilities.
-                // If there were more than three URI formatting options, then I'd create an enum
+                // Attempt to download from the various URL possibilities.
+                // If there were more than three URL formatting options, then I'd create an enum
                 // of those options and iterate through them. But with only three, the nesting is
                 // not terrible.
                 // First try the AWS server.
-                let episode_uri = format_aws_uri(ep_no);
-                if download_ep(&episode_uri, &mut pod_file, ep_no).is_none() {
+                let episode_url = format_aws_url(ep_no);
+                if download_ep(&episode_url, &mut pod_file, ep_no).is_none() {
                     // Now try Tom F's web server using zero padding.
                     println!("AWS did not have episode {ep_no}, trying Tom F's web server...");
-                    let episode_uri = format_pentadact_uri_with_zero(ep_no);
+                    let episode_url = format_pentadact_url_with_zero(ep_no);
 
-                    if download_ep(&episode_uri, &mut pod_file, ep_no).is_none() {
+                    if download_ep(&episode_url, &mut pod_file, ep_no).is_none() {
                         // Finally, try Tom F's web server without zero padding.
                         println!("Zero-padding episode {ep_no} did not work, trying without...");
-                        let episode_uri = format_pentadact_uri_no_zero(ep_no);
-                        if download_ep(&episode_uri, &mut pod_file, ep_no).is_none() {
+                        let episode_url = format_pentadact_url_no_zero(ep_no);
+                        if download_ep(&episode_url, &mut pod_file, ep_no).is_none() {
                             eprintln!(">>> Failed to download episode {ep_no}");
                         }
                     }
@@ -156,35 +156,35 @@ fn main() {
 
 #[cfg(test)]
 mod tests {
-    use crate::{format_aws_uri, format_pentadact_uri_no_zero, format_pentadact_uri_with_zero};
+    use crate::{format_aws_url, format_pentadact_url_no_zero, format_pentadact_url_with_zero};
 
     #[test]
-    fn create_single_digit_episode_uri() {
+    fn create_single_digit_episode_url() {
         let expected = "https://s3-eu-west-1.amazonaws.com/crateandcrowbar/episodes/CCEp001.mp3";
-        assert_eq!(format_aws_uri(1), expected);
+        assert_eq!(format_aws_url(1), expected);
     }
 
     #[test]
-    fn create_double_digit_episode_uri() {
+    fn create_double_digit_episode_url() {
         let expected = "https://s3-eu-west-1.amazonaws.com/crateandcrowbar/episodes/CCEp021.mp3";
-        assert_eq!(format_aws_uri(21), expected);
+        assert_eq!(format_aws_url(21), expected);
     }
 
     #[test]
-    fn create_triple_digit_episode_uri() {
+    fn create_triple_digit_episode_url() {
         let expected = "https://s3-eu-west-1.amazonaws.com/crateandcrowbar/episodes/CCEp121.mp3";
-        assert_eq!(format_aws_uri(121), expected);
+        assert_eq!(format_aws_url(121), expected);
     }
 
     #[test]
-    fn create_pentadact_two_digit_with_zero_episode_uri() {
+    fn create_pentadact_two_digit_with_zero_episode_url() {
         let expected = "https://www.pentadact.com/podcast/CCEp085.mp3";
-        assert_eq!(format_pentadact_uri_with_zero(85), expected);
+        assert_eq!(format_pentadact_url_with_zero(85), expected);
     }
 
     #[test]
-    fn create_pentadact_two_digit_no_zero_episode_uri() {
+    fn create_pentadact_two_digit_no_zero_episode_url() {
         let expected = "https://www.pentadact.com/podcast/CCEp78.mp3";
-        assert_eq!(format_pentadact_uri_no_zero(78), expected);
+        assert_eq!(format_pentadact_url_no_zero(78), expected);
     }
 }

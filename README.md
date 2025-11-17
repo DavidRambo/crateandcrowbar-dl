@@ -48,20 +48,20 @@ Downloaded episode 89. File size: 55931276
 
 ## Organization/Explanation
 
-### Formatting download URIs
+### Formatting download URLs
 
-There are three different functions that format a URI from which to download an episode:
+There are three different functions that format a URL from which to download an episode:
 
-- `format_aws_uri`
-- `format_pentadact_uri_with_zero`
-- `format_pentadact_uri_no_zero`
+- `format_aws_url`
+- `format_pentadact_url_with_zero`
+- `format_pentadact_url_no_zero`
 
 The earliest episodes are hosted on AWS.
 Then, starting at episode 76, they are mostly hosted on [Tom Francis's website](https://www.pentadact.com).
 At least two episodes (77 and 82) are linked to AWS on the crateandcrowbar.com (the "Download" link beneath the embedded media player).
 At least two episodes are available on AWS but not linked to from the podcast website (107 and 108).
 
-The URI looks like either:
+The URL looks like either:
 
 "https://s3-eu-west-1.amazonaws.com/crateandcrowbar/episodes/CCEp001.mp3"
 
@@ -79,7 +79,7 @@ But once ep 100 is hit, it stops being a concern.
 
 Hence the use of multiple request attempts.
 
-In an earlier commit, before I realized that the URIs would be an issue, I had created a struct to hold both the formatted URI and the episode number, which went into the Vec of episodes.
+In an earlier commit, before I realized that the URLs would be an issue, I had created a struct to hold both the formatted URL and the episode number, which went into the Vec of episodes.
 
 ### Multithreading
 
@@ -94,7 +94,7 @@ Within each iteration, the chunk is turned into a Vec so that its items can be m
 The inner loop itreates over those items, spawning a thread for each one.
 A handle for each thread is pushed onto a Vec so that the outer loop can wait for all to join before moving on.
 
-Each thread attempts to download the episode, going over each URI formatting function as needed.
+Each thread attempts to download the episode, going over each URL formatting function as needed.
 
 # Improvements
 
