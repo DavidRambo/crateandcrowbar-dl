@@ -76,3 +76,8 @@ The zero prefix seems to be the standard.
 But once ep 100 is hit, it stops being a concern.
 
 Hence the use of multiple request attempts.
+
+# Improvements
+
+Currently, a fresh thread is created for each download.
+Instead, I'd like to use a thread pool.
