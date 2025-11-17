@@ -62,13 +62,13 @@ fn format_pentadact_url_no_zero(ep_no: usize) -> String {
 
 /// Attempts to download the episode mp3 and save it to the specified file.
 /// Returns an Option of the number of bytes if successful, otherwise None.
-fn download_ep(url: &str, pod_file: &mut File, ep_no: usize) -> Option<u64> {
+fn download_ep(url: &str, pod_file: &mut File, ep_no: usize) -> Option<()> {
     if let Ok(mut res) = reqwest::blocking::get(url) {
         if res.status().is_success() {
             match res.copy_to(pod_file) {
                 Ok(res) => {
                     println!("Downloaded episode {ep_no}. File size: {res}");
-                    return Some(res);
+                    return Some(());
                 }
                 Err(err) => {
                     eprintln!("Failed to download episode {ep_no} at {url}");
