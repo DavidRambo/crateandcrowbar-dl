@@ -87,12 +87,14 @@ fn main() {
     // In this example, make sure the crate_and_crowbar directory already exists.
     std::env::set_current_dir("/var/home/{YOUR_HOME_HERE}/crate_and_crowbar").expect("Change PWD");
 
+    // NOTE: Set the range of eposides to download here.
+    let first_ep_no = 1;
+    let last_ep_no = 100;
     // Create list of episode numbers.
-    let first_ep_no = 90;
-    let last_ep_no = 120;
     let episodes_vec = (first_ep_no..=last_ep_no).collect::<Vec<usize>>();
 
     // Setup for threads.
+    // NOTE: Set the number to whatever makes sense for your system.
     let threads: usize = 4;
     let episode_chunks = episodes_vec.chunks(threads);
     let mut handles = Vec::with_capacity(threads);
