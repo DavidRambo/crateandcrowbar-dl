@@ -60,6 +60,8 @@ fn format_pentadact_uri_no_zero(ep_no: usize) -> String {
     format!("{uri_base}{:}{uri_ext}", ep_no)
 }
 
+/// Attempts to download the episode mp3 and save it to the specified file.
+/// Returns an Option of the number of bytes if successful, otherwise None.
 fn download_ep(uri: &str, pod_file: &mut File, ep_no: usize) -> Option<u64> {
     if let Ok(mut res) = reqwest::blocking::get(uri) {
         if res.status().is_success() {
